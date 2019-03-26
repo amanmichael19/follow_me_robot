@@ -1,0 +1,8 @@
+prefix=/home/amanuel/catkin_ws_proj/devel
+
+Name: visp_camera_calibration
+Description: Description of visp_camera_calibration
+Version: 0.9.3
+Cflags: -I/home/amanuel/catkin_ws_proj/devel/include -I/usr/include/x86_64-linux-gnu -I/usr/include/opencv -I/usr/include -I/usr/include/libxml2 -I/usr/include/libusb-1.0
+Libs: -L/home/amanuel/catkin_ws_proj/devel/lib /usr/lib/x86_64-linux-gnu/libvisp_vs.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_visual_features.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_vision.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_tt_mi.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_tt.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_me.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_mbt.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_klt.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_blob.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_sensor.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_robot.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_io.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_gui.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_detection.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_core.so.3.0.0 /usr/lib/x86_64-linux-gnu/libvisp_ar.so.3.0.0
+Requires: geometry_msgs message_runtime sensor_msgs std_msgs

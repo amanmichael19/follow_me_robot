@@ -117,6 +117,12 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/amanuel/catkin_ws_proj/build/gtest/cmake_install.cmake")
+  include("/home/amanuel/catkin_ws_proj/build/vision_visp/vision_visp/cmake_install.cmake")
+  include("/home/amanuel/catkin_ws_proj/build/vision_visp/visp_bridge/cmake_install.cmake")
+  include("/home/amanuel/catkin_ws_proj/build/vision_visp/visp_camera_calibration/cmake_install.cmake")
+  include("/home/amanuel/catkin_ws_proj/build/vision_visp/visp_hand2eye_calibration/cmake_install.cmake")
+  include("/home/amanuel/catkin_ws_proj/build/vision_visp/visp_tracker/cmake_install.cmake")
+  include("/home/amanuel/catkin_ws_proj/build/vision_visp/visp_auto_tracker/cmake_install.cmake")
 
 endif()
 
