@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(motion_planning)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   std_msgs
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -200,3 +201,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+add_executable(pure_pursuit_node src/pure_pursuit.cpp)
+add_dependencies(pure_pursuit_node ${motion_planning_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(pure_pursuit_node ${catkin_LIBRARIES})

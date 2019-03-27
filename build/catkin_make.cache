@@ -1,2 +1,2 @@
-vision_visp/vision_visp:vision_visp/visp_auto_tracker:vision_visp/visp_bridge:vision_visp/visp_camera_calibration:vision_visp/visp_hand2eye_calibration:vision_visp/visp_tracker
+motion_planning:vision_visp/vision_visp:vision_visp/visp_auto_tracker:vision_visp/visp_bridge:vision_visp/visp_camera_calibration:vision_visp/visp_hand2eye_calibration:vision_visp/visp_tracker
 -DCATKIN_DEVEL_PREFIX=/home/amanuel/catkin_ws_proj/devel -DCMAKE_INSTALL_PREFIX=/home/amanuel/catkin_ws_proj/install -G Unix Makefiles

@@ -1,0 +1,8 @@
+prefix=/home/amanuel/catkin_ws_proj/install
+
+Name: motion_planning
+Description: Description of motion_planning
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/amanuel/catkin_ws_proj/install/lib 
+Requires: 
