@@ -34,6 +34,8 @@ class PurePursuit{
             NodeHandle n;
             vel_pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
             //pose_sub = n.subscribe<Pose>("/visp...", 1, &PurePursuit::generatorCallback, this);
+            
+            // for testing purposes, getting pose from odom
             pose_sub = n.subscribe("/odom", 10, &PurePursuit::poseCallback, this);
             form_figure8_path();
         }
@@ -43,7 +45,7 @@ class PurePursuit{
         void poseCallback(const nav_msgs::Odometry::ConstPtr& odom_msg){
             odom_input_data = *odom_msg;
         }
-
+        // using figure8 to test the path tracking algorithm
         void form_figure8_path(){
             double x = 0.0, y=0.0;
             for(double i = 0.0; i<6.911; i+=0.628){
@@ -82,6 +84,7 @@ class PurePursuit{
 
         void track_path(){
             WayPoint* closest = get_closest_path_point();
+            // adjust heading and sail to goal point
         }
 };
 
