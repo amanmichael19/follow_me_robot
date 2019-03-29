@@ -59,7 +59,7 @@ class PurePursuit{
                 figure8_path.push_back(new WayPoint(x, y, 0.0));
             }
         }
-        void semi_circle_path(){
+        void form_semi_circle_path(){
             double x = 0.0, y = 0.0;
             for(double i=0.0; i<3.2986; i+=0.157){
                 x = 5*cos(i);
@@ -109,10 +109,10 @@ class PurePursuit{
         WayPoint* get_goalpt_lookAhead_distance_away(WayPoint* closest){
             // use a lookahead distance to select from waypoints
             for(int i = last_visited_waypt_idx; i < semi_circle_path.size()-1; i++){
-                WayPoint* waypt_i = semi_circle_path(i);
-                WayPoint* waypt_next = semi_circle_path(i+1);
+                WayPoint* waypt_i = semi_circle_path[i];
+                WayPoint* waypt_next = semi_circle_path[i+1];
                 double lower_bd_dist = get_euclidean_distance(robot_posX(), robot_posY(), waypt_i->x, waypt_i->y);
-                double upper_bd_dist = get_euclidean_distance(robot_posX(), robot_posY(), waypt_next->x, waypt_next->y)
+                double upper_bd_dist = get_euclidean_distance(robot_posX(), robot_posY(), waypt_next->x, waypt_next->y);
                 if(lower_bd_dist < look_ahead_dist && upper_bd_dist > look_ahead_dist){
                     last_visited_waypt_idx = i;
                     next_waypt_idx = i+1;
