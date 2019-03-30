@@ -21,7 +21,7 @@ struct Point{
 struct WayPoint : public Point {
     double curvature;
     bool visited;
-    WayPoint(double x_in, double y_in, double curv_in): x(x_in), y(y_in), curvature(curv_in), visited(false){}
+    WayPoint(double x_in, double y_in, double curv_in): Point(x_in, y_in), curvature(curv_in), visited(false){}
 };
 
 class PurePursuit{
@@ -110,7 +110,7 @@ class PurePursuit{
         */
         double getShortestDistToLine(double slope, WayPoint* waypt, Point* pt){
             double intercept = waypt->y - slope*waypt->x;
-            double numerator = fabs(pt->y - (slope*pt->x) - b);
+            double numerator = fabs(pt->y - (slope*pt->x) - intercept);
             double dist = numerator / sqrt(1 + pow(slope, 2));
             return dist;
         }
@@ -156,6 +156,14 @@ class PurePursuit{
                 } else {
                     return false;
                 }
+            } else {
+                return false;
+            }
+        }
+        bool pathFinished(){
+            WayPoint*& last_waypoint = semi_circle_path.back();
+            if(getEuclideanDistance(robotPosX(), robotPosY(), last_waypoint->x, last_waypoint->y) < 0.001){
+                return true;
             } else {
                 return false;
             }
@@ -220,7 +228,7 @@ class PurePursuit{
         void move(double tolerance, double yaw_tolerance){
             //bool clockwise = (waypoint.y - robotPosY()) < 0 ? true : false;
             while(!pathFinished()){
-                if(onPath){
+                if(onPath()){
 
                 }
             }
