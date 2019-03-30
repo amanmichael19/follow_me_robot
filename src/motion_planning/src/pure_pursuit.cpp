@@ -55,6 +55,14 @@ class PurePursuit{
         void poseCallback(const nav_msgs::Odometry::ConstPtr& odom_msg){
             odom_input_data = *odom_msg;
         }
+
+        /**
+        * 
+        * Helper functions start here
+        *
+        */
+
+
         // using figure8 to test the path tracking algorithm
         void formFigure8Path(){
             double x = 0.0, y=0.0;
@@ -92,6 +100,14 @@ class PurePursuit{
         double getEuclideanDistance(double x1, double y1, double x2, double y2){
             return sqrt(pow(x2-x1, 2) + pow(y2-y1, 2));
         }
+
+        /**
+        * Shortest distance from a point (Xo,Yo) to a line ay + bx + c is
+        *       |a(Yo)+b(Xo)+c|
+        * d =  ____________________
+        *         ___________
+        *       \| a^2 + b^2
+        */
         double getShortestDistToLine(double slope, WayPoint* waypt, Point* pt){
             double intercept = waypt->y - slope*waypt->x;
             double numerator = fabs(pt->y - (slope*pt->x) - b);
@@ -118,6 +134,16 @@ class PurePursuit{
                 return false;
             }
         }
+        /**
+        *
+        * Helper functions end
+        *
+        */
+        
+        /**
+        * Check if the robot is on path
+        *
+        */
         bool onPath(){
             if(last_visited_waypt_idx != nullptr){
                 WayPoint* waypt_i = semi_circle_path[*last_visited_waypt_idx];
