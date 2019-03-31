@@ -145,11 +145,11 @@ class PurePursuit{
         *
         */
         bool onPath(){
+            Point* current_pose = new Point(robotPosX(), robotPosY());
             if(last_visited_waypt_idx != nullptr){
                 WayPoint* waypt_i = semi_circle_path[*last_visited_waypt_idx];
                 WayPoint* waypt_next = semi_circle_path[*next_waypt_idx];
                 double slope = (waypt_next->y - waypt_i->y) / (waypt_next->x - waypt_i->x);
-                Point* current_pose = new Point(robotPosX(), robotPosY());
                 Point* pt_on_line = getPtOnLinePerpendicularToAPt(slope, waypt_i, current_pose);
                 if(betweenTwoptsOnALine(waypt_i, waypt_next, pt_on_line) && (getShortestDistToLine(slope, waypt_i, current_pose) < look_ahead_dist)){
                     return true;
@@ -157,6 +157,10 @@ class PurePursuit{
                     return false;
                 }
             } else {
+                WayPoint* waypt_i = semi_circle_path[0];
+                if(getEuclideanDistance(current_pose->x, current_pose->y, waypt_i->x, waypt_i->y) < look_ahead_dist){
+                    return true;
+                }
                 return false;
             }
         }
@@ -195,15 +199,18 @@ class PurePursuit{
             }
         }
 
-        WayPoint* getGoalptLookAheadDistanceAway(WayPoint* closest, WayPoint* last_goalpt){
+        WayPoint* getGoalptLookAheadDistanceAway(){
             // use a lookahead distance to select from waypoints
-            if(last_visited_waypt_idx != nullptr){
+            Point* current_pose = new Point(robotPosX(), robotPosY());
+            if(last_visited_waypt_idx != nullptr && last_goalpt != nullptr){
                 for(int i = *last_visited_waypt_idx; i < semi_circle_path.size()-1; i++){
                     WayPoint* waypt_i = semi_circle_path[i];
                     WayPoint* waypt_next = semi_circle_path[i+1];
-                    double lower_bd_dist = getEuclideanDistance(robotPosX(), robotPosY(), waypt_i->x, waypt_i->y);
-                    double upper_bd_dist = getEuclideanDistance(robotPosX(), robotPosY(), waypt_next->x, waypt_next->y);
-                    if(lower_bd_dist < look_ahead_dist && upper_bd_dist > look_ahead_dist){
+                    // if(betweenTwoptsOnALine(waypt_i, waypt_next, current_pose)){
+                    //     *last_visited_waypt_idx = i;    
+                    // }
+                    double upper_bd_dist = getEuclideanDistance(current_pose->x, current_pose->y, waypt_next->x, waypt_next->y);
+                    if(upper_bd_dist >= look_ahead_dist){
                         *last_visited_waypt_idx = i;
                         *next_waypt_idx = i+1;
                         double slope = (waypt_next->y - waypt_i->y) / (waypt_next->x - waypt_i->x);
@@ -211,25 +218,73 @@ class PurePursuit{
                         double y_m = waypt_i->y + sign(waypt_next->y - waypt_i->y) * look_ahead_dist * slope * sqrt(1/(1+pow(slope, 2)));
                         WayPoint* interpolated_waypt = new WayPoint(x_m, y_m, 0.0);
                         return interpolated_waypt;
+                    } else {
+                        continue;
                     }
                 }
+                WayPoint* finisher_waypt = semi_circle_path.back();
+                return finisher_waypt;
         
+            } else {
+                if(onPath()){
+                    *last_visited_waypt_idx = 0;
+                    *next_waypt_idx = 1;
+                    return semi_circle_path[0];
+                }
             }
             return nullptr;
             
 
         }
 
-        void getDesiredCurvature(WayPoint* goalpt){
+        double getDesiredCurvature(WayPoint* goalpt){
             double curvature = 2*(goalpt->x - robotPosX())/ pow(look_ahead_dist, 2);
-            
+            return curvature;
+        }
+        double getCurrentCurvature(WayPoint* goalpt){
+            double dist = getEuclideanDistance(robotPosX(), robotPosY(), goalpt->x, goalpt->y);
+            return 2*(goalpt->x - robotPosX())/ pow(dist, 2);
         }
 
-        void move(double tolerance, double yaw_tolerance){
-            //bool clockwise = (waypoint.y - robotPosY()) < 0 ? true : false;
+        void basic_pursuit(double tolerance){
+            Rate my_rate(10);
+            geometry_msgs::Twist twist_msg;
+            double forward_speed = 0.4;
+            twist_msg.linear.x = forward_speed;
+            twist_msg.linear.y = 0;
+            twist_msg.linear.z = 0;
+
+            twist_msg.angular.x = 0;
+            twist_msg.angular.y = 0;
+            
+            spinOnce();                  
             while(!pathFinished()){
                 if(onPath()){
 
+                    WayPoint* goalpt = getGoalptLookAheadDistanceAway();
+                    double desired_curvature = getDesiredCurvature(goalpt);
+                    Rate my_rate2(100);
+                    while(getEuclideanDistance(robotPosX(), robotPosY(), goalpt->x, goalpt->y > 0.001)){
+                        double current_curvature = getCurrentCurvature(goalpt);
+                        double integral_curv = 0.0, derivative_curv = 0.0, lastError_curv = 0.0;
+                        double Kp = 2/pow(look_ahead_dist,2);
+                        double Ki = 0.01;
+                        double Kd = 0.06;
+
+                        // PD control for steering;
+                        double error = goalpt->x - robotPosX();
+                        integral_curv = integral_curv + error;
+                        derivative_curv = error - lastError_curv;
+                        lastError_curv = error;
+                        // double turn = Kp*error_yaw + Ki*integral_yaw + Kd*derivative_yaw;
+                        double turn = Kp*error + Kd*derivative_curv;
+                        twist_msg.angular.z = turn;
+                        vel_pub.publish(twist_msg);
+                        spinOnce();
+                        my_rate2.sleep();
+                    }
+                    
+                    my_rate.sleep();
                 }
             }
             /**
@@ -273,7 +328,7 @@ class PurePursuit{
                 cout<<"desired_yaw-current_inside:"<<desired_yaw-current_yaw<<endl;
 
                 //PD control for velocity
-                double distance_error = getEucilideanDistance(robotPosX(),robotPosY(), waypoint);
+                double distance_error = getEuclideanDistance(robotPosX(),robotPosY(), waypoint);
                 integral_dist = integral_dist + distance_error;
                 derivative_dist = distance_error - lastError_dist;
                 lastError_dist = distance_error;
@@ -305,6 +360,9 @@ class PurePursuit{
             twist_msg.angular.z = 0;
             vel_pub.publish(twist_msg);
             */
+        }
+        void adaptive_pursuit(){
+            // do adaptive pursuit
         }
 };
 
