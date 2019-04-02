@@ -28,7 +28,7 @@ class PurePursuit{
     queue<WayPoint*> generated_path;
     vector<WayPoint*> figure8_path;
     vector<WayPoint*> semi_circle_path;
-    double look_ahead_dist;
+    double look_ahead_dist = 0.5;
     Publisher vel_pub;
     Subscriber pose_sub;
     nav_msgs::Odometry odom_input_data;
@@ -45,7 +45,7 @@ class PurePursuit{
             //pose_sub = n.subscribe<Pose>("/visp...", 1, &PurePursuit::generatorCallback, this);
             
             // for testing purposes, getting pose from odom
-            pose_sub = n.subscribe("/odom", 10, &PurePursuit::poseCallback, this);
+            pose_sub = n.subscribe<nav_msgs::Odometry>("/odom", 10, &PurePursuit::poseCallback, this);
             formFigure8Path();
             formSemiCirclePath();
         }
@@ -74,9 +74,9 @@ class PurePursuit{
         }
         void formSemiCirclePath(){
             double x = 0.0, y = 0.0;
-            for(double i=0.0; i<3.2986; i+=0.157){
-                x = 5*cos(i);
-                y = 5*sin(i);
+            for(double i=3.1415926; i > -0.1; i-=0.1570796){
+                x = 3 + 3*cos(i);
+                y = 3*sin(i);
                 semi_circle_path.push_back(new WayPoint(x, y, 1/5));
             }
         }
@@ -287,6 +287,9 @@ class PurePursuit{
                     my_rate.sleep();
                 }
             }
+            twist_msg.angular.z = 0;
+            twist_msg.linear.x = 0;
+            vel_pub.publish(twist_msg);
             /**
             double desired_yaw = caculateDesiredOrientation(robotPosX, robotPosY(), waypoint, clockwise);
             if(waypoint.y - robotPosY() == 0){
@@ -369,6 +372,6 @@ class PurePursuit{
 
 int main(int argc, char** argv){
     PurePursuit pure_pursuit(argc, argv, "pure_pursuit_node");
-
+    pure_pursuit.basic_pursuit(0.001);
     return 0;
 }

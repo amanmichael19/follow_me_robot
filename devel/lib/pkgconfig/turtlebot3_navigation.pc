@@ -1,0 +1,8 @@
+prefix=/home/amanuel/catkin_ws_proj/devel
+
+Name: turtlebot3_navigation
+Description: Description of turtlebot3_navigation
+Version: 1.2.0
+Cflags: 
+Libs: -L/home/amanuel/catkin_ws_proj/devel/lib 
+Requires: 
