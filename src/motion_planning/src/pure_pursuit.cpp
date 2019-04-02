@@ -8,6 +8,8 @@
 #include <string>
 #include <tf/tf.h>
 
+// Note there might be a memory leak problem might crash rarely, it is due to no deallocation. Will be done when
+// everything else is done.
 
 using namespace std;
 using namespace ros;
@@ -201,8 +203,10 @@ class PurePursuit{
 
         WayPoint* getGoalptLookAheadDistanceAway(){
             // use a lookahead distance to select from waypoints
+            cout<<"gets here"<<endl;
             Point* current_pose = new Point(robotPosX(), robotPosY());
             if(last_visited_waypt_idx != nullptr && last_goalpt != nullptr){
+                cout<<"gets in the for loop"<<endl;
                 for(int i = *last_visited_waypt_idx; i < semi_circle_path.size()-1; i++){
                     WayPoint* waypt_i = semi_circle_path[i];
                     WayPoint* waypt_next = semi_circle_path[i+1];
@@ -226,12 +230,15 @@ class PurePursuit{
                 return finisher_waypt;
         
             } else {
+                cout<<"it is in else"<<endl;
                 if(onPath()){
-                    *last_visited_waypt_idx = 0;
-                    *next_waypt_idx = 1;
+                    cout<<"is it here?"<<endl;
+                    last_visited_waypt_idx = new int(0);
+                    next_waypt_idx = new int(1);
                     return semi_circle_path[0];
                 }
             }
+            cout<<"oh its null"<<endl;
             return nullptr;
             
 
@@ -257,12 +264,14 @@ class PurePursuit{
             twist_msg.angular.x = 0;
             twist_msg.angular.y = 0;
             
-            spinOnce();                  
+            spinOnce();
             while(!pathFinished()){
                 if(onPath()){
-
+                    cout<<"okay here"<<endl;
                     WayPoint* goalpt = getGoalptLookAheadDistanceAway();
+                    cout<<"good here"<<endl;
                     double desired_curvature = getDesiredCurvature(goalpt);
+                    cout<<"okay 2"<<endl;
                     Rate my_rate2(100);
                     while(getEuclideanDistance(robotPosX(), robotPosY(), goalpt->x, goalpt->y > 0.001)){
                         double current_curvature = getCurrentCurvature(goalpt);
