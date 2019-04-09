@@ -31,7 +31,8 @@ class PurePursuit{
     queue<WayPoint*> generated_path;
     vector<WayPoint*> figure8_path;
     vector<WayPoint*> semi_circle_path;
-    double look_ahead_dist = 1;
+    vector<WayPoint*> polygon_path;
+    double look_ahead_dist = 0.5;
     Publisher vel_pub;
     Subscriber pose_sub;
     nav_msgs::Odometry odom_input_data;
@@ -51,6 +52,7 @@ class PurePursuit{
             pose_sub = n.subscribe<nav_msgs::Odometry>("/odom", 10, &PurePursuit::poseCallback, this);
             formFigure8Path();
             formSemiCirclePath();
+            formPolygonPath();
         }
         // void generatorCallback(const geometry_msgs::Pose::ConstPtr& pose_msg){
             
@@ -74,6 +76,13 @@ class PurePursuit{
                 y = 4*sin(i)*cos(i);
                 figure8_path.push_back(new WayPoint(x, y, 0.0));
             }
+        }
+        void formPolygonPath(){
+            polygon_path.push_back(new WayPoint(0.0, 0.0, 0.0));
+            polygon_path.push_back(new WayPoint(2.0, 2.0, 0.0));
+            polygon_path.push_back(new WayPoint(4.0, 2.0, 0.0));
+            polygon_path.push_back(new WayPoint(5.0, 5.0, 0.0));
+            polygon_path.push_back(new WayPoint(7.0, 4.0, 0.0));
         }
         void formSemiCirclePath(){
             double x = 0.0, y = 0.0;
@@ -123,20 +132,27 @@ class PurePursuit{
         }
         template<typename T>
         Point* getPtOnLinePerpendicularToAPt(double slope, WayPoint* waypt, T* pt){
-            double slope_2 = -1 * slope;
-            double intercept_1 = waypt->y - slope*waypt->x;
-            double intercept_2 = pt->y - slope_2*pt->x;
-            double intersection_x = (intercept_2 - intercept_1) / 2*slope;
-            double intersection_y = (intercept_2 + intercept_1) / 2;
+            double slope_2;
+            double intersection_x;
+            double intersection_y;
+            if(fabs(slope) > 0.001){
+              slope_2 = -1 / slope;
+              double intercept_1 = waypt->y - slope*waypt->x;
+              double intercept_2 = pt->y - slope_2*pt->x;
+              intersection_x = slope*(intercept_2 - intercept_1)/(pow(slope,2)+1);
+              intersection_y = slope*intersection_x + intercept_1;
+            } else{
+              intersection_x = pt->x;
+              intersection_y = waypt->y;
+            }
             return new Point(intersection_x, intersection_y);
-
         }
         template <typename T>
         bool betweenTwoptsOnALine(WayPoint* a, WayPoint* b, T* pt){
             double a_pt_dist = getEuclideanDistance(a->x, a->y, pt->x, pt->y);
             double pt_b_dist = getEuclideanDistance(pt->x, pt->y, b->x, b->y);
             double a_b_dist = getEuclideanDistance(a->x, a->y, b->x, b->y);
-            if(a_pt_dist + pt_b_dist - a_b_dist < 0.00001){
+            if(a_pt_dist + pt_b_dist - a_b_dist < 0.001){
                 return true;
             } else {
                 return false;
@@ -226,18 +242,25 @@ class PurePursuit{
         }
 
         Point getIntersectionPtCircleLine(double slp, WayPoint* waypt_i, WayPoint* waypt_next, geometry_msgs::Point ctr){
+            cout<<"slp: "<< slp<<endl;
+            
             double ipt = waypt_i->y - slp*waypt_i->x;
             double r = look_ahead_dist;
             Point intersection_pt1;
             Point intersection_pt2;
-
+            cout<<"ipt: "<< ipt<<endl;
             double x_numerator1 = sqrt(-1*pow(ipt,2) - 2*ipt*slp*ctr.x + 2*ipt*ctr.y - pow(slp*ctr.x, 2) + pow(slp*r, 2) + 2*slp*ctr.x*ctr.y - pow(ctr.y,2) + pow(r,2));
             double x_numerator2 =  -1*ipt*slp + slp*ctr.y + ctr.x;
             double x_denominator = pow(slp,2) + 1;
+            cout<<"x_numerator1: "<<x_numerator1<<endl;
+            cout<<"x_numerator2: "<<x_numerator2<<endl;
+            cout<<"ctr: "<<ctr.x<<","<<ctr.y<<endl;
             intersection_pt1.x = (x_numerator1 + x_numerator2) / x_denominator;
             intersection_pt2.x = (-1*x_numerator1 + x_numerator2)/ x_denominator;
             intersection_pt1.y = slp*intersection_pt1.x + ipt;
             intersection_pt2.y = slp*intersection_pt2.x + ipt;
+            cout<<"intersection_pt1"<<intersection_pt1.x<<" , "<<intersection_pt1.y<<endl;
+            cout<<"intersection_pt2"<<intersection_pt2.x<<" , "<<intersection_pt2.y<<endl;
             if(betweenTwoptsOnALine(waypt_i, waypt_next, &intersection_pt1)){
                 return intersection_pt1;
             } else {
@@ -251,10 +274,16 @@ class PurePursuit{
                 WayPoint* waypt_i = semi_circle_path[i];
                 WayPoint* waypt_next = semi_circle_path[i+1];
                 double slope = (waypt_next->y - waypt_i->y) / (waypt_next->x - waypt_i->x);
+                cout<<"**setLastVisisted**"<<endl;
+                cout<<"waypt_i: "<<waypt_i->x<<","<<waypt_i->y<<endl;
+                cout<<"slope: "<<slope<<endl;
                 Point* pt_on_line = getPtOnLinePerpendicularToAPt(slope, waypt_i, &current_pose);
                 //cout<<"does this"<<endl;
+                cout<<"pt_on_line: "<<pt_on_line->x<<","<<pt_on_line->y<<endl;
+                cout<<"current_pose: "<<current_pose.x<<","<<current_pose.y<<endl;
+                cout<<"***"<<endl;
                 if(betweenTwoptsOnALine(waypt_i, waypt_next, pt_on_line)){
-                    //cout<<"does this too"<<endl;
+                    cout<<"sets the visited idx"<<endl;
                     *last_visited_waypt_idx = i;
                     break;
                 }
@@ -266,19 +295,30 @@ class PurePursuit{
             cout<<"gets here"<<endl;
             geometry_msgs::Point current_pose = currentRobotPose().position;
             setLastVisitedWaypt();
+            cout<<"last_visited_waypt: "<<*last_visited_waypt_idx<<endl;
             if(last_visited_waypt_idx != nullptr){
                 cout<<"gets in the for loop"<<endl;
                 for(int i = *last_visited_waypt_idx; i < semi_circle_path.size()-1; i++){
                     WayPoint* waypt_i = semi_circle_path[i];
                     WayPoint* waypt_next = semi_circle_path[i+1];
+
+                    
+
                     // if(betweenTwoptsOnALine(waypt_i, waypt_next, current_pose)){
                     //     *last_visited_waypt_idx = i;    
                     // }
+                    
+                    cout<<"Waypt_i: "<<waypt_i -> x << ","<<waypt_i-> y<<endl;
+                        cout<<"Waypt_next: "<<waypt_next -> x << ","<<waypt_next-> y<<endl;
                     double upper_bd_dist = getEuclideanDistance(current_pose.x, current_pose.y, waypt_next->x, waypt_next->y);
+                    cout<<"upper_bd_dist: "<<upper_bd_dist<<endl;
                     if(upper_bd_dist >= look_ahead_dist){
+                        
+
                         *next_waypt_idx = i+1;
                         double slope = (waypt_next->y - waypt_i->y) / (waypt_next->x - waypt_i->x);
                         Point interpolated = getIntersectionPtCircleLine(slope, waypt_i, waypt_next, current_pose);
+                        cout<<"interpolated: "<<interpolated.x<<" , "<<interpolated.y<<endl;
                         // double x_m = current_pose.x + sign(waypt_next->x - waypt_i->x) * look_ahead_dist * sqrt(1/(1+pow(slope, 2)));
                         // double y_m = current_pose.y + sign(waypt_next->y - waypt_i->y) * look_ahead_dist * slope * sqrt(1/(1+pow(slope, 2)));
                         WayPoint* interpolated_waypt = new WayPoint(interpolated.x, interpolated.y, 0.0);
@@ -344,6 +384,9 @@ class PurePursuit{
                 if(1){
                     cout<<"**** "<< k <<" ****"<<endl; 
                     WayPoint* goalpt = getGoalptLookAheadDistanceAway();
+                    if(isnan(goalpt->x) || isnan(goalpt->y)){
+                        break;
+                    }
                     last_goalpt = goalpt;
                     double desired_curvature = getCurvature(goalpt);
                     // double integral_curv = 0.0, derivative_curv = 0.0, lastError_curv = 0.0;
