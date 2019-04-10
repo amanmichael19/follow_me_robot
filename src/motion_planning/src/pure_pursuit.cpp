@@ -212,7 +212,7 @@ class PurePursuit{
         
         
         bool pathFinished(){
-            WayPoint*& last_waypoint = semi_circle_path.back();
+            WayPoint*& last_waypoint = figure8_path.back();
             if(getEuclideanDistance(robotPosX(), robotPosY(), last_waypoint->x, last_waypoint->y) < 0.01){
                 return true;
             } else {
@@ -229,8 +229,8 @@ class PurePursuit{
             if(last_visited_waypt_idx != nullptr){
                 //cout<<"its here"<<endl;
                 setLastVisitedWaypt();
-                WayPoint* waypt_i = semi_circle_path[*last_visited_waypt_idx];
-                WayPoint* waypt_next = semi_circle_path[*last_visited_waypt_idx + 1];
+                WayPoint* waypt_i = figure8_path[*last_visited_waypt_idx];
+                WayPoint* waypt_next = figure8_path[*last_visited_waypt_idx + 1];
                 if(*last_visited_waypt_idx == 19){
                     cout<<"waypt_i: "<<waypt_i -> x << ","<<waypt_i-> y<<endl;
                     cout<<"waypt_next: "<<waypt_next -> x << ","<<waypt_next-> y<<endl;
@@ -248,7 +248,7 @@ class PurePursuit{
                     return false;
                 }
             } else {
-                WayPoint* waypt_i = semi_circle_path[0];
+                WayPoint* waypt_i = figure8_path[0];
                 if(getEuclideanDistance(current_pose.x, current_pose.y, waypt_i->x, waypt_i->y) < look_ahead_dist){
                     return true;
                 }
@@ -258,9 +258,9 @@ class PurePursuit{
 
         WayPoint* getClosestPathPoint(){
             if(last_visited_waypt_idx != nullptr){
-                return semi_circle_path[*next_waypt_idx];
+                return figure8_path[*next_waypt_idx];
             } else {
-                return semi_circle_path[0];
+                return figure8_path[0];
             }
         }
 
@@ -269,10 +269,10 @@ class PurePursuit{
             geometry_msgs::Point current_pose = currentRobotPose().position;
             if(last_visited_waypt_idx != nullptr)
             {
-                for(int i = *last_visited_waypt_idx; i < semi_circle_path.size()-1; i++)
+                for(int i = *last_visited_waypt_idx; i < figure8_path.size()-1; i++)
                 {
-                    WayPoint* waypt_i = semi_circle_path[i];
-                    WayPoint* waypt_next = semi_circle_path[i+1];
+                    WayPoint* waypt_i = figure8_path[i];
+                    WayPoint* waypt_next = figure8_path[i+1];
                     double slope = (waypt_next->y - waypt_i->y) / (waypt_next->x - waypt_i->x);
                     // cout<<"**setLastVisisted**"<<endl;
                     // cout<<"waypt_i: "<<waypt_i->x<<","<<waypt_i->y<<endl;
@@ -305,10 +305,10 @@ class PurePursuit{
                 cout<<"last_visited_waypt: "<<*last_visited_waypt_idx<<endl;
                 if(last_visited_waypt_idx != nullptr){
                     cout<<"gets in the for loop"<<endl;
-                    for(int i = *last_visited_waypt_idx; i < semi_circle_path.size(); i++){
-                        if(i < semi_circle_path.size()-1){
-                            WayPoint* waypt_i = semi_circle_path[i];
-                            WayPoint* waypt_next = semi_circle_path[i+1];
+                    for(int i = *last_visited_waypt_idx; i < figure8_path.size(); i++){
+                        if(i < figure8_path.size()-1){
+                            WayPoint* waypt_i = figure8_path[i];
+                            WayPoint* waypt_next = figure8_path[i+1];
 
                             cout<<"Waypt_i: "<<waypt_i -> x << ","<<waypt_i-> y<<endl;
                             cout<<"Waypt_next: "<<waypt_next -> x << ","<<waypt_next-> y<<endl;
@@ -328,7 +328,7 @@ class PurePursuit{
                         } else {
                             cout<<"gets to last waypt"<<endl;
                             *next_waypt_idx = i;
-                            return semi_circle_path[i];
+                            return figure8_path[i];
                         }                
                     }
                 } else {
