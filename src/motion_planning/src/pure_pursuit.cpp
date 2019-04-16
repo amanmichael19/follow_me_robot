@@ -8,8 +8,6 @@
 #include <string>
 #include <tf/tf.h>
 
-// Note there might be a memory leak problem might crash rarely, it is due to no deallocation. Will be done when
-// everything else is done.
 
 using namespace std;
 using namespace ros;
@@ -46,7 +44,6 @@ class PurePursuit{
             NodeHandle n;
             vel_pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
             //pose_sub = n.subscribe<Pose>("/visp...", 1, &PurePursuit::generatorCallback, this);
-            
             // for testing purposes, getting pose from odom
             pose_sub = n.subscribe<nav_msgs::Odometry>("/odom", 10, &PurePursuit::poseCallback, this);
             formFigure8Path();
@@ -70,7 +67,7 @@ class PurePursuit{
         // using figure8 to test the path tracking algorithm
         void formFigure8Path(){
             double x = 0.0, y=0.0;
-            for(double i = 0.0; i<6.597; i+=0.314){ //6.911 0.628
+            for(double i = 0.0; i<6.3; i+=0.314){ //6.911 0.628
                 x = 4*sin(i);
                 y = 4*sin(i)*cos(i);
                 figure8_path.push_back(new WayPoint(x, y, 0.0));
@@ -285,6 +282,7 @@ class PurePursuit{
                     if(betweenTwoptsOnALine(waypt_i, waypt_next, pt_on_line)){
                         //cout<<"sets the visited idx"<<endl;
                         *last_visited_waypt_idx = i;
+                        figure8_path[i]->visited = true;
                         break;
                     }          
                 }
@@ -380,8 +378,8 @@ class PurePursuit{
             int k = 0;
             spinOnce();
             
-            Rate my_rate(10);
-
+            Rate my_rate(20);
+            
             while(!pathFinished()){
                 
             //while(!finished){
