@@ -68,8 +68,8 @@ class PurePursuit{
         void formFigure8Path(){
             double x = 0.0, y=0.0;
             for(double i = 0.0; i<6.3; i+=0.314){ //6.911 0.628
-                x = 4*sin(i);
-                y = 4*sin(i)*cos(i);
+                x = 2*sin(i);
+                y = 2*sin(i)*cos(i);
                 figure8_path.push_back(new WayPoint(x, y, 0.0));
             }
         }
@@ -210,7 +210,9 @@ class PurePursuit{
         
         bool pathFinished(){
             WayPoint*& last_waypoint = figure8_path.back();
-            if(getEuclideanDistance(robotPosX(), robotPosY(), last_waypoint->x, last_waypoint->y) < 0.01){
+            bool waypt_before_last_visited = figure8_path[figure8_path.size()-2]->visited;
+           
+            if((getEuclideanDistance(robotPosX(), robotPosY(), last_waypoint->x, last_waypoint->y) < 0.01) && waypt_before_last_visited){
                 return true;
             } else {
                 return false;
@@ -290,6 +292,7 @@ class PurePursuit{
             else 
             {
                 last_visited_waypt_idx = new int(0);
+                figure8_path[*last_visited_waypt_idx]->visited = true;
                 next_waypt_idx = new int(1);
             }
             
@@ -364,7 +367,7 @@ class PurePursuit{
         void basic_pursuit(){
             
             geometry_msgs::Twist twist_msg;
-            double forward_speed = 0.3;
+            double forward_speed = 0.5;
             double turn = 0.0;
             double desired_curvature = 0.0;
 
