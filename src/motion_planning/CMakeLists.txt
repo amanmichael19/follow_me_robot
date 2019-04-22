@@ -204,3 +204,11 @@ include_directories(
 add_executable(pure_pursuit_node src/pure_pursuit.cpp)
 add_dependencies(pure_pursuit_node ${motion_planning_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(pure_pursuit_node ${catkin_LIBRARIES})
+
+add_executable(path_planner_node src/path_planner.cpp)
+add_dependencies(path_planner_node ${motion_planning_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(path_planner_node ${catkin_LIBRARIES})
+
+add_executable(visp_auto_tracker_node src/visp_auto_tracker.cpp)
+add_dependencies(visp_auto_tracker_node ${motion_planning_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(visp_auto_tracker_node ${catkin_LIBRARIES})

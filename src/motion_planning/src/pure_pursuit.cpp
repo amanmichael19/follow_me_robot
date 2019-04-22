@@ -1,7 +1,9 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Odometry.h>
+#include <nav_msgs/Path.h>
 #include <vector>
 #include <queue>
 #include <cmath>
@@ -26,71 +28,104 @@ struct WayPoint : public Point {
 };
 
 class PurePursuit{
-    queue<WayPoint*> generated_path;
-    vector<WayPoint*> figure8_path;
-    vector<WayPoint*> semi_circle_path;
-    vector<WayPoint*> polygon_path;
-    double look_ahead_dist = 0.5;
-    Publisher vel_pub;
-    Subscriber pose_sub;
-    nav_msgs::Odometry odom_input_data;
-    int* last_visited_waypt_idx = nullptr;
-    int* next_waypt_idx = nullptr;
+    private:
+      nav_msgs::Path _generated_path;
+      vector<WayPoint*> _figure8_path;
+      vector<WayPoint*> _semi_circle_path;
+      vector<WayPoint*> _polygon_path;
+      double _look_ahead_dist = 0.5;
+      Publisher _vel_pub;
+      Subscriber _pose_sub;
+      Subscriber _path_sub;
+      nav_msgs::Odometry _odom_input_data;
+      nav_msgs::Path _path_to_publish;
+      int* _last_visited_waypt_idx = nullptr;
+      int* _next_waypt_idx = nullptr;
+      bool no_run = false;
 
 
     public:
-        PurePursuit(int argc, char** argv, string node_name){
-            init(argc, argv, node_name);
-            NodeHandle n;
-            vel_pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
-            //pose_sub = n.subscribe<Pose>("/visp...", 1, &PurePursuit::generatorCallback, this);
-            // for testing purposes, getting pose from odom
-            pose_sub = n.subscribe<nav_msgs::Odometry>("/odom", 10, &PurePursuit::poseCallback, this);
-            formFigure8Path();
+        PurePursuit(NodeHandle& n){
+            _path_sub = n.subscribe<nav_msgs::Path>("/generated_path", 10, &PurePursuit::pathCallback, this);
+            _vel_pub = n.advertise<geometry_msgs::Twist>("/cmd_vel", 1);
+            _pose_sub = n.subscribe<nav_msgs::Odometry>("/odom", 10, &PurePursuit::poseCallback, this);
+            changePathToWayPointObject();
             formSemiCirclePath();
             formPolygonPath();
+            runPursuit();
         }
-        // void generatorCallback(const geometry_msgs::Pose::ConstPtr& pose_msg){
-            
-        // }
+
+        void pathCallback(const nav_msgs::Path::ConstPtr& path_msg){
+            _generated_path = *path_msg;
+        }
+
         void poseCallback(const nav_msgs::Odometry::ConstPtr& odom_msg){
-            odom_input_data = *odom_msg;
+            _odom_input_data = *odom_msg;
+        }
+
+        void runPursuit(){
+            if(!no_run){
+                basic_pursuit();
+            } else {
+                ROS_ERROR("[ERROR]: can't start. there is error");
+                return;
+            }
         }
 
         /**
-        * 
+        *
         * Helper functions start here
         *
         */
 
 
         // using figure8 to test the path tracking algorithm
-        void formFigure8Path(){
-            double x = 0.0, y=0.0;
-            for(double i = 0.0; i<6.3; i+=0.314){ //6.911 0.628
-                x = 2*sin(i);
-                y = 2*sin(i)*cos(i);
-                figure8_path.push_back(new WayPoint(x, y, 0.0));
+        // void formFigure8Path(){
+        //     double x = 0.0, y=0.0;
+        //     for(double i = 0.0; i<6.3; i+=0.314){ //6.911 0.628
+        //         x = 2*sin(i);
+        //         y = 2*sin(i)*cos(i);
+        //         _figure8_path.push_back(new WayPoint(x, y, 0.0));
+        //     }
+        // }
+        //changing to waypoint object since every thing was done using that object at first so
+        // instead of changing everything, I have this function to change from PoseStamped object
+        // to WayPoint object
+        void changePathToWayPointObject(){
+            Rate loop_rate(5);
+            while(_generated_path.poses.size() == 0){
+                spinOnce();
+                loop_rate.sleep();
+            }
+            if(_generated_path.poses.size() != 0){
+                for(geometry_msgs::PoseStamped path_point: _generated_path.poses){
+                    _figure8_path.push_back(new WayPoint(path_point.pose.position.x, path_point.pose.position.y, path_point.pose.position.z));
+                }
+            } else {
+                no_run = true;
+                ROS_ERROR("[ERROR]: No generated path");
+                return;
             }
         }
+
         void formPolygonPath(){
-            polygon_path.push_back(new WayPoint(0.0, 0.0, 0.0));
-            polygon_path.push_back(new WayPoint(2.0, 2.0, 0.0));
-            polygon_path.push_back(new WayPoint(4.0, 2.0, 0.0));
-            polygon_path.push_back(new WayPoint(5.0, 5.0, 0.0));
-            polygon_path.push_back(new WayPoint(7.0, 4.0, 0.0));
+            _polygon_path.push_back(new WayPoint(0.0, 0.0, 0.0));
+            _polygon_path.push_back(new WayPoint(2.0, 2.0, 0.0));
+            _polygon_path.push_back(new WayPoint(4.0, 2.0, 0.0));
+            _polygon_path.push_back(new WayPoint(5.0, 5.0, 0.0));
+            _polygon_path.push_back(new WayPoint(7.0, 4.0, 0.0));
         }
         void formSemiCirclePath(){
             double x = 0.0, y = 0.0;
             for(double i=3.1415926; i > -0.1; i-=0.1570796){
                 x = 3 + 3*cos(i);
                 y = 3*sin(i);
-                semi_circle_path.push_back(new WayPoint(x, y, 1/5));
+                _semi_circle_path.push_back(new WayPoint(x, y, 1/5));
             }
         }
         double quaternionToEulerYaw(){
             tf::Quaternion quat;
-            tf::quaternionMsgToTF(odom_input_data.pose.pose.orientation, quat);
+            tf::quaternionMsgToTF(_odom_input_data.pose.pose.orientation, quat);
             double roll, pitch, yaw;
             tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);
             return yaw;
@@ -100,13 +135,13 @@ class PurePursuit{
             return val >= 0 ? 1 : -1;
         }
         double robotPosX(){
-            return odom_input_data.pose.pose.position.x;
+            return _odom_input_data.pose.pose.position.x;
         }
         double robotPosY(){
-            return odom_input_data.pose.pose.position.y;
+            return _odom_input_data.pose.pose.position.y;
         }
         geometry_msgs::Pose currentRobotPose(){
-            return odom_input_data.pose.pose;
+            return _odom_input_data.pose.pose;
         }
         double getEuclideanDistance(double x1, double y1, double x2, double y2){
             return sqrt(pow(x2-x1, 2) + pow(y2-y1, 2));
@@ -156,9 +191,9 @@ class PurePursuit{
         }
         Point getIntersectionPtCircleLine(double slp, WayPoint* waypt_i, WayPoint* waypt_next, geometry_msgs::Point ctr){
             //cout<<"slp: "<< slp<<endl;
-            
+
             double ipt = waypt_i->y - slp*waypt_i->x;
-            double r = look_ahead_dist;
+            double r = _look_ahead_dist;
             Point intersection_pt1;
             Point intersection_pt2;
             //cout<<"ipt: "<< ipt<<endl;
@@ -182,7 +217,7 @@ class PurePursuit{
                 return intersection_pt1;
             } else {
                 return intersection_pt2;
-            } 
+            }
 
         }
 
@@ -206,12 +241,12 @@ class PurePursuit{
         * Helper functions end
         *
         */
-        
-        
+
+
         bool pathFinished(){
-            WayPoint*& last_waypoint = figure8_path.back();
-            bool waypt_before_last_visited = figure8_path[figure8_path.size()-2]->visited;
-           
+            WayPoint*& last_waypoint = _figure8_path.back();
+            bool waypt_before_last_visited = _figure8_path[_figure8_path.size()-2]->visited;
+
             if((getEuclideanDistance(robotPosX(), robotPosY(), last_waypoint->x, last_waypoint->y) < 0.01) && waypt_before_last_visited){
                 return true;
             } else {
@@ -225,30 +260,30 @@ class PurePursuit{
         */
         bool onPath(){
             geometry_msgs::Point current_pose = currentRobotPose().position;
-            if(last_visited_waypt_idx != nullptr){
+            if(_last_visited_waypt_idx != nullptr){
                 //cout<<"its here"<<endl;
                 setLastVisitedWaypt();
-                WayPoint* waypt_i = figure8_path[*last_visited_waypt_idx];
-                WayPoint* waypt_next = figure8_path[*last_visited_waypt_idx + 1];
-                if(*last_visited_waypt_idx == 19){
+                WayPoint* waypt_i = _figure8_path[*_last_visited_waypt_idx];
+                WayPoint* waypt_next = _figure8_path[*_last_visited_waypt_idx + 1];
+                if(*_last_visited_waypt_idx == 19){
                     cout<<"waypt_i: "<<waypt_i -> x << ","<<waypt_i-> y<<endl;
                     cout<<"waypt_next: "<<waypt_next -> x << ","<<waypt_next-> y<<endl;
                 }
                 // cout<<"waypt_i: "<<waypt_i -> x << ","<<waypt_i-> y<<endl;
                 // cout<<"waypt_next: "<<waypt_next -> x << ","<<waypt_next-> y<<endl;
-                // cout<<"last_visited_idx: "<<*last_visited_waypt_idx<<endl;
+                // cout<<"last_visited_idx: "<<*_last_visited_waypt_idx<<endl;
                 // cout<<"current_pose: "<<current_pose.x<<" , "<<current_pose.y<<endl;
 
                 double slope = (waypt_next->y - waypt_i->y) / (waypt_next->x - waypt_i->x);
                 Point* pt_on_line = getPtOnLinePerpendicularToAPt(slope, waypt_i, &current_pose);
-                if(betweenTwoptsOnALine(waypt_i, waypt_next, pt_on_line) && getShortestDistToLine(slope, waypt_i, &current_pose) < look_ahead_dist){
+                if(betweenTwoptsOnALine(waypt_i, waypt_next, pt_on_line) && getShortestDistToLine(slope, waypt_i, &current_pose) < _look_ahead_dist){
                     return true;
                 } else {
                     return false;
                 }
             } else {
-                WayPoint* waypt_i = figure8_path[0];
-                if(getEuclideanDistance(current_pose.x, current_pose.y, waypt_i->x, waypt_i->y) < look_ahead_dist){
+                WayPoint* waypt_i = _figure8_path[0];
+                if(getEuclideanDistance(current_pose.x, current_pose.y, waypt_i->x, waypt_i->y) < _look_ahead_dist){
                     return true;
                 }
                 return false;
@@ -256,22 +291,25 @@ class PurePursuit{
         }
 
         WayPoint* getClosestPathPoint(){
-            if(last_visited_waypt_idx != nullptr){
-                return figure8_path[*next_waypt_idx];
+            if(_last_visited_waypt_idx != nullptr){
+                return _figure8_path[*_next_waypt_idx];
             } else {
-                return figure8_path[0];
+                return _figure8_path[0];
             }
         }
 
-        
+        // void publishNavPath(WayPoint* waypt){
+
+        // }
+
         void setLastVisitedWaypt(){
             geometry_msgs::Point current_pose = currentRobotPose().position;
-            if(last_visited_waypt_idx != nullptr)
+            if(_last_visited_waypt_idx != nullptr)
             {
-                for(int i = *last_visited_waypt_idx; i < figure8_path.size()-1; i++)
+                for(int i = *_last_visited_waypt_idx; i < _figure8_path.size()-1; i++)
                 {
-                    WayPoint* waypt_i = figure8_path[i];
-                    WayPoint* waypt_next = figure8_path[i+1];
+                    WayPoint* waypt_i = _figure8_path[i];
+                    WayPoint* waypt_next = _figure8_path[i+1];
                     double slope = (waypt_next->y - waypt_i->y) / (waypt_next->x - waypt_i->x);
                     // cout<<"**setLastVisisted**"<<endl;
                     // cout<<"waypt_i: "<<waypt_i->x<<","<<waypt_i->y<<endl;
@@ -283,19 +321,19 @@ class PurePursuit{
                     // cout<<"***"<<endl;
                     if(betweenTwoptsOnALine(waypt_i, waypt_next, pt_on_line)){
                         //cout<<"sets the visited idx"<<endl;
-                        *last_visited_waypt_idx = i;
-                        figure8_path[i]->visited = true;
+                        *_last_visited_waypt_idx = i;
+                        _figure8_path[i]->visited = true;
                         break;
-                    }          
+                    }
                 }
-            } 
-            else 
-            {
-                last_visited_waypt_idx = new int(0);
-                figure8_path[*last_visited_waypt_idx]->visited = true;
-                next_waypt_idx = new int(1);
             }
-            
+            else
+            {
+                _last_visited_waypt_idx = new int(0);
+                _figure8_path[*_last_visited_waypt_idx]->visited = true;
+                _next_waypt_idx = new int(1);
+            }
+
         }
         WayPoint* getGoalptLookAheadDistanceAway(bool is_on_path){
             // use a lookahead distance to select from waypoints
@@ -303,21 +341,21 @@ class PurePursuit{
             geometry_msgs::Point current_pose = currentRobotPose().position;
             if(is_on_path){
                 setLastVisitedWaypt();
-                cout<<"last_visited_waypt: "<<*last_visited_waypt_idx<<endl;
-                if(last_visited_waypt_idx != nullptr){
+                cout<<"last_visited_waypt: "<<*_last_visited_waypt_idx<<endl;
+                if(_last_visited_waypt_idx != nullptr){
                     cout<<"gets in the for loop"<<endl;
-                    for(int i = *last_visited_waypt_idx; i < figure8_path.size(); i++){
-                        if(i < figure8_path.size()-1){
-                            WayPoint* waypt_i = figure8_path[i];
-                            WayPoint* waypt_next = figure8_path[i+1];
+                    for(int i = *_last_visited_waypt_idx; i < _figure8_path.size(); i++){
+                        if(i < _figure8_path.size()-1){
+                            WayPoint* waypt_i = _figure8_path[i];
+                            WayPoint* waypt_next = _figure8_path[i+1];
 
                             cout<<"Waypt_i: "<<waypt_i -> x << ","<<waypt_i-> y<<endl;
                             cout<<"Waypt_next: "<<waypt_next -> x << ","<<waypt_next-> y<<endl;
 
                             double upper_bd_dist = getEuclideanDistance(current_pose.x, current_pose.y, waypt_next->x, waypt_next->y);
                             cout<<"upper_bd_dist: "<<upper_bd_dist<<endl;
-                            if(upper_bd_dist >= look_ahead_dist){
-                                *next_waypt_idx = i+1;
+                            if(upper_bd_dist >= _look_ahead_dist){
+                                *_next_waypt_idx = i+1;
                                 double slope = (waypt_next->y - waypt_i->y) / (waypt_next->x - waypt_i->x);
                                 Point interpolated = getIntersectionPtCircleLine(slope, waypt_i, waypt_next, current_pose);
                                 cout<<"interpolated: "<<interpolated.x<<" , "<<interpolated.y<<endl;
@@ -328,14 +366,14 @@ class PurePursuit{
                             }
                         } else {
                             cout<<"gets to last waypt"<<endl;
-                            *next_waypt_idx = i;
-                            return figure8_path[i];
-                        }                
+                            *_next_waypt_idx = i;
+                            return _figure8_path[i];
+                        }
                     }
                 } else {
-                    return nullptr; 
+                    return nullptr;
                 }
-                
+
             } else {
                 WayPoint* closest_waypt = getClosestPathPoint();
                 double slope = (closest_waypt->y - current_pose.y) / (closest_waypt->x - current_pose.x);
@@ -345,8 +383,8 @@ class PurePursuit{
                 WayPoint* interpolated_waypt = new WayPoint(interpolated.x, interpolated.y, 0.0);
                 return interpolated_waypt;
             }
-            
-            
+
+
         }
 
         double getCurvature(WayPoint* goalpt){
@@ -360,14 +398,14 @@ class PurePursuit{
             if(dist > 0.0001){
                 cout<<"tf_goalpt_y: "<< tf_goal_point.y<<endl;
                 curvature = 2*(tf_goal_point.y)/ pow(dist, 2);
-            } 
+            }
             return isnan(curvature) ? 0 : curvature;
         }
 
         void basic_pursuit(){
-            
+
             geometry_msgs::Twist twist_msg;
-            double forward_speed = 0.5;
+            double forward_speed = 0.4;
             double turn = 0.0;
             double desired_curvature = 0.0;
 
@@ -377,23 +415,23 @@ class PurePursuit{
 
             twist_msg.angular.x = 0;
             twist_msg.angular.y = 0;
-            
+
             int k = 0;
             spinOnce();
-            
-            Rate my_rate(20);
-            
+
+            Rate my_rate(15);
+
             while(!pathFinished()){
-                
+
             //while(!finished){
                 cout<<"**** "<< k <<" ****"<<endl;
                 bool is_on_path = onPath();
-                cout<<boolalpha<<"pathfinished: "<<pathFinished()<<endl;               
+                cout<<boolalpha<<"pathfinished: "<<pathFinished()<<endl;
                 cout<<boolalpha<<"is_on_path: "<<is_on_path<<endl;
                 cout<<"    robot_pose: "<<robotPosX()<<","<<robotPosY()<<endl;
                 if(is_on_path){
                 //if(1){
-                     
+
                     WayPoint* goalpt = getGoalptLookAheadDistanceAway(is_on_path);
                     if(isnan(goalpt->x) || isnan(goalpt->y) || goalpt == nullptr){
                         break;
@@ -402,41 +440,41 @@ class PurePursuit{
 
                     cout<<"    Goal point: "<<goalpt -> x << ","<<goalpt-> y<<endl;
                     cout<<"    dist_from_goal: "<<getEuclideanDistance(robotPosX(), robotPosY(), goalpt->x, goalpt->y)<<endl;
-                    
+
 
                     turn = desired_curvature*forward_speed;
                     cout<<"       turn: "<< turn<< endl;
-                   
+
                     twist_msg.angular.z = turn;
- 
+
                     cout<< "desired_curvature: "<<desired_curvature<<endl;
                     cout<<"radius: "<<1/desired_curvature<<endl;
                     cout<<"euclidean dist: "<<getEuclideanDistance(robotPosX(), robotPosY(), goalpt->x, goalpt->y)<<endl;
-                    cout<<"lookahead: "<<look_ahead_dist<<endl;
+                    cout<<"lookahead: "<<_look_ahead_dist<<endl;
                     cout<<"forward speed: "<<twist_msg.linear.x<<endl;
-                    
-              
-                    
+
+
+
                 } else {
                     WayPoint* goalpt = getGoalptLookAheadDistanceAway(is_on_path);
                     desired_curvature = getCurvature(goalpt);
                     turn = desired_curvature*forward_speed;
                     cout<<"       turn: "<< turn<< endl;
-                   
+
                     twist_msg.angular.z = turn;
-                    
-                
+
+
                 }
                 ++k;
-                vel_pub.publish(twist_msg);
+                _vel_pub.publish(twist_msg);
                 spinOnce();
                 my_rate.sleep();
-                
+
             }
             twist_msg.angular.z = 0;
             twist_msg.linear.x = 0;
-            vel_pub.publish(twist_msg);
-            
+            _vel_pub.publish(twist_msg);
+
         }
 
         void adaptive_pursuit(){
@@ -446,7 +484,8 @@ class PurePursuit{
 
 
 int main(int argc, char** argv){
-    PurePursuit pure_pursuit(argc, argv, "pure_pursuit_node");
-    pure_pursuit.basic_pursuit();
+    init(argc, argv, "pure_pursuit_node");
+    NodeHandle n;
+    PurePursuit pure_pursuit(n);
     return 0;
 }

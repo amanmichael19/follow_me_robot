@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(visp_tracker_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/amanuel/catkin_ws_proj/devel/include;/usr/include/x86_64-linux-gnu;/usr/include/opencv;/usr/include;/usr/include/libxml2;/usr/include/libusb-1.0 " STREQUAL " ")
+if(NOT "/home/amanuel/catkin_ws_proj/devel/include;/opt/ros/kinetic/include;/opt/ros/kinetic/include/opencv-3.3.1-dev;/opt/ros/kinetic/include/opencv-3.3.1-dev/opencv;/usr/include/eigen3;/usr/include/libxml2;/usr/include;/usr/include/libusb-1.0;/usr/include/OGRE;/usr/include/ois " STREQUAL " ")
   set(visp_tracker_INCLUDE_DIRS "")
-  set(_include_dirs "/home/amanuel/catkin_ws_proj/devel/include;/usr/include/x86_64-linux-gnu;/usr/include/opencv;/usr/include;/usr/include/libxml2;/usr/include/libusb-1.0")
+  set(_include_dirs "/home/amanuel/catkin_ws_proj/devel/include;/opt/ros/kinetic/include;/opt/ros/kinetic/include/opencv-3.3.1-dev;/opt/ros/kinetic/include/opencv-3.3.1-dev/opencv;/usr/include/eigen3;/usr/include/libxml2;/usr/include;/usr/include/libusb-1.0;/usr/include/OGRE;/usr/include/ois")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT "http://wiki.ros.org/wiki/visp_tracker " STREQUAL " ")
@@ -116,7 +116,7 @@ if(NOT "/home/amanuel/catkin_ws_proj/devel/include;/usr/include/x86_64-linux-gnu
   endforeach()
 endif()
 
-set(libraries "trackerNodelet;visp_tracker;/usr/lib/x86_64-linux-gnu/libvisp_vs.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_visual_features.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_vision.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_tt_mi.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_tt.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_me.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_mbt.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_klt.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_blob.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_sensor.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_robot.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_io.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_gui.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_detection.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_core.so.3.0.0;/usr/lib/x86_64-linux-gnu/libvisp_ar.so.3.0.0")
+set(libraries "trackerNodelet;visp_tracker;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_vs.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_visual_features.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_vision.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_tt_mi.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_tt.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_me.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_mbt.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_klt.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_blob.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_sensor.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_robot.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_io.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_imgproc.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_gui.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_detection.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_core.so.3.1.0;/opt/ros/kinetic/lib/x86_64-linux-gnu/libvisp_ar.so.3.1.0")
 foreach(library ${libraries})
   # keep build configuration keywords, target names and absolute libraries as-is
   if("${library}" MATCHES "^(debug|optimized|general)$")

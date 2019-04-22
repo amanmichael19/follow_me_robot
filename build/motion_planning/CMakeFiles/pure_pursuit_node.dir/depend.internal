@@ -18,6 +18,7 @@ motion_planning/CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit.cpp.o
  /opt/ros/kinetic/include/geometry_msgs/Vector3.h
  /opt/ros/kinetic/include/geometry_msgs/Vector3Stamped.h
  /opt/ros/kinetic/include/nav_msgs/Odometry.h
+ /opt/ros/kinetic/include/nav_msgs/Path.h
  /opt/ros/kinetic/include/ros/advertise_options.h
  /opt/ros/kinetic/include/ros/advertise_service_options.h
  /opt/ros/kinetic/include/ros/assert.h

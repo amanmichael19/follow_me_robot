@@ -2,7 +2,7 @@ prefix=/home/amanuel/catkin_ws_proj/install
 
 Name: visp_hand2eye_calibration
 Description: Description of visp_hand2eye_calibration
-Version: 0.9.3
+Version: 0.10.0
 Cflags: -I/home/amanuel/catkin_ws_proj/install/include
 Libs: -L/home/amanuel/catkin_ws_proj/install/lib 
 Requires: geometry_msgs message_runtime roscpp sensor_msgs std_msgs

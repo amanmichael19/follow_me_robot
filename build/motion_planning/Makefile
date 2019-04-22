@@ -166,6 +166,36 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+motion_planning/CMakeFiles/visp_auto_tracker_node.dir/rule:
+	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f CMakeFiles/Makefile2 motion_planning/CMakeFiles/visp_auto_tracker_node.dir/rule
+.PHONY : motion_planning/CMakeFiles/visp_auto_tracker_node.dir/rule
+
+# Convenience name for target.
+visp_auto_tracker_node: motion_planning/CMakeFiles/visp_auto_tracker_node.dir/rule
+
+.PHONY : visp_auto_tracker_node
+
+# fast build rule for target.
+visp_auto_tracker_node/fast:
+	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f motion_planning/CMakeFiles/visp_auto_tracker_node.dir/build.make motion_planning/CMakeFiles/visp_auto_tracker_node.dir/build
+.PHONY : visp_auto_tracker_node/fast
+
+# Convenience name for target.
+motion_planning/CMakeFiles/path_planner_node.dir/rule:
+	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f CMakeFiles/Makefile2 motion_planning/CMakeFiles/path_planner_node.dir/rule
+.PHONY : motion_planning/CMakeFiles/path_planner_node.dir/rule
+
+# Convenience name for target.
+path_planner_node: motion_planning/CMakeFiles/path_planner_node.dir/rule
+
+.PHONY : path_planner_node
+
+# fast build rule for target.
+path_planner_node/fast:
+	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f motion_planning/CMakeFiles/path_planner_node.dir/build.make motion_planning/CMakeFiles/path_planner_node.dir/build
+.PHONY : path_planner_node/fast
+
+# Convenience name for target.
 motion_planning/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule:
 	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f CMakeFiles/Makefile2 motion_planning/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
 .PHONY : motion_planning/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
@@ -855,6 +885,33 @@ actionlib_generate_messages_nodejs/fast:
 	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f motion_planning/CMakeFiles/actionlib_generate_messages_nodejs.dir/build.make motion_planning/CMakeFiles/actionlib_generate_messages_nodejs.dir/build
 .PHONY : actionlib_generate_messages_nodejs/fast
 
+src/path_planner.o: src/path_planner.cpp.o
+
+.PHONY : src/path_planner.o
+
+# target to build an object file
+src/path_planner.cpp.o:
+	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f motion_planning/CMakeFiles/path_planner_node.dir/build.make motion_planning/CMakeFiles/path_planner_node.dir/src/path_planner.cpp.o
+.PHONY : src/path_planner.cpp.o
+
+src/path_planner.i: src/path_planner.cpp.i
+
+.PHONY : src/path_planner.i
+
+# target to preprocess a source file
+src/path_planner.cpp.i:
+	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f motion_planning/CMakeFiles/path_planner_node.dir/build.make motion_planning/CMakeFiles/path_planner_node.dir/src/path_planner.cpp.i
+.PHONY : src/path_planner.cpp.i
+
+src/path_planner.s: src/path_planner.cpp.s
+
+.PHONY : src/path_planner.s
+
+# target to generate assembly for a file
+src/path_planner.cpp.s:
+	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f motion_planning/CMakeFiles/path_planner_node.dir/build.make motion_planning/CMakeFiles/path_planner_node.dir/src/path_planner.cpp.s
+.PHONY : src/path_planner.cpp.s
+
 src/pure_pursuit.o: src/pure_pursuit.cpp.o
 
 .PHONY : src/pure_pursuit.o
@@ -882,6 +939,33 @@ src/pure_pursuit.cpp.s:
 	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f motion_planning/CMakeFiles/pure_pursuit_node.dir/build.make motion_planning/CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit.cpp.s
 .PHONY : src/pure_pursuit.cpp.s
 
+src/visp_auto_tracker.o: src/visp_auto_tracker.cpp.o
+
+.PHONY : src/visp_auto_tracker.o
+
+# target to build an object file
+src/visp_auto_tracker.cpp.o:
+	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f motion_planning/CMakeFiles/visp_auto_tracker_node.dir/build.make motion_planning/CMakeFiles/visp_auto_tracker_node.dir/src/visp_auto_tracker.cpp.o
+.PHONY : src/visp_auto_tracker.cpp.o
+
+src/visp_auto_tracker.i: src/visp_auto_tracker.cpp.i
+
+.PHONY : src/visp_auto_tracker.i
+
+# target to preprocess a source file
+src/visp_auto_tracker.cpp.i:
+	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f motion_planning/CMakeFiles/visp_auto_tracker_node.dir/build.make motion_planning/CMakeFiles/visp_auto_tracker_node.dir/src/visp_auto_tracker.cpp.i
+.PHONY : src/visp_auto_tracker.cpp.i
+
+src/visp_auto_tracker.s: src/visp_auto_tracker.cpp.s
+
+.PHONY : src/visp_auto_tracker.s
+
+# target to generate assembly for a file
+src/visp_auto_tracker.cpp.s:
+	cd /home/amanuel/catkin_ws_proj/build && $(MAKE) -f motion_planning/CMakeFiles/visp_auto_tracker_node.dir/build.make motion_planning/CMakeFiles/visp_auto_tracker_node.dir/src/visp_auto_tracker.cpp.s
+.PHONY : src/visp_auto_tracker.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -891,6 +975,8 @@ help:
 	@echo "... install"
 	@echo "... edit_cache"
 	@echo "... install/local"
+	@echo "... visp_auto_tracker_node"
+	@echo "... path_planner_node"
 	@echo "... rosgraph_msgs_generate_messages_cpp"
 	@echo "... tf2_msgs_generate_messages_cpp"
 	@echo "... rosgraph_msgs_generate_messages_eus"
@@ -941,9 +1027,15 @@ help:
 	@echo "... actionlib_msgs_generate_messages_cpp"
 	@echo "... sensor_msgs_generate_messages_eus"
 	@echo "... actionlib_generate_messages_nodejs"
+	@echo "... src/path_planner.o"
+	@echo "... src/path_planner.i"
+	@echo "... src/path_planner.s"
 	@echo "... src/pure_pursuit.o"
 	@echo "... src/pure_pursuit.i"
 	@echo "... src/pure_pursuit.s"
+	@echo "... src/visp_auto_tracker.o"
+	@echo "... src/visp_auto_tracker.i"
+	@echo "... src/visp_auto_tracker.s"
 .PHONY : help
 
 

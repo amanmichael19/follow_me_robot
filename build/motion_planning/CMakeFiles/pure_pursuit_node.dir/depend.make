@@ -17,6 +17,7 @@ motion_planning/CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit.cpp.o: /opt/ro
 motion_planning/CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit.cpp.o: /opt/ros/kinetic/include/geometry_msgs/Vector3.h
 motion_planning/CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit.cpp.o: /opt/ros/kinetic/include/geometry_msgs/Vector3Stamped.h
 motion_planning/CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit.cpp.o: /opt/ros/kinetic/include/nav_msgs/Odometry.h
+motion_planning/CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit.cpp.o: /opt/ros/kinetic/include/nav_msgs/Path.h
 motion_planning/CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit.cpp.o: /opt/ros/kinetic/include/ros/advertise_options.h
 motion_planning/CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit.cpp.o: /opt/ros/kinetic/include/ros/advertise_service_options.h
 motion_planning/CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit.cpp.o: /opt/ros/kinetic/include/ros/assert.h

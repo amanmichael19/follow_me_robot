@@ -1,5 +1,5 @@
 set(_CATKIN_CURRENT_PACKAGE "visp_camera_calibration")
-set(visp_camera_calibration_VERSION "0.9.3")
+set(visp_camera_calibration_VERSION "0.10.0")
 set(visp_camera_calibration_MAINTAINER "Fabien Spindler <Fabien.Spindler@inria.fr>")
 set(visp_camera_calibration_PACKAGE_FORMAT "1")
 set(visp_camera_calibration_BUILD_DEPENDS "camera_calibration_parsers" "geometry_msgs" "message_generation" "roscpp" "sensor_msgs" "std_msgs" "visp" "visp_bridge")

@@ -19,12 +19,15 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/home/amanuel/catkin_ws_proj/devel/include"
-  "/usr/include/x86_64-linux-gnu"
-  "/usr/include/opencv"
+  "/opt/ros/kinetic/include"
+  "/opt/ros/kinetic/include/opencv-3.3.1-dev"
+  "/opt/ros/kinetic/include/opencv-3.3.1-dev/opencv"
+  "/usr/include/eigen3"
   "/usr/include/libxml2"
   "/usr/include/libusb-1.0"
+  "/usr/include/OGRE"
+  "/usr/include/ois"
   "/home/amanuel/catkin_ws_proj/src/vision_visp/visp_bridge/include"
-  "/opt/ros/kinetic/include"
   "/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   )
 

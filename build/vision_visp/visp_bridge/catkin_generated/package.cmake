@@ -1,5 +1,5 @@
 set(_CATKIN_CURRENT_PACKAGE "visp_bridge")
-set(visp_bridge_VERSION "0.9.3")
+set(visp_bridge_VERSION "0.10.0")
 set(visp_bridge_MAINTAINER "Fabien Spindler <Fabien.Spindler@inria.fr>")
 set(visp_bridge_PACKAGE_FORMAT "1")
 set(visp_bridge_BUILD_DEPENDS "geometry_msgs" "roscpp" "sensor_msgs" "std_msgs" "visp" "camera_calibration_parsers")

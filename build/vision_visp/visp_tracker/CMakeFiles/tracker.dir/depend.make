@@ -60,15 +60,4 @@ vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /opt/ro
 vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /opt/ros/kinetic/include/rosconsole/macros_generated.h
 vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /opt/ros/kinetic/include/xmlrpcpp/XmlRpcDecl.h
 vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /opt/ros/kinetic/include/xmlrpcpp/XmlRpcValue.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/bits/select.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/bits/select2.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/bits/sigset.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/bits/time.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/bits/timex.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/bits/types.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/bits/typesizes.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/bits/wordsize.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/sys/select.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/sys/time.h
-vision_visp/visp_tracker/CMakeFiles/tracker.dir/src/nodes/tracker.cpp.o: /usr/include/x86_64-linux-gnu/sys/timeb.h
 

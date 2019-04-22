@@ -1,14 +1,14 @@
 
 "use strict";
 
-let CalibPoint = require('./CalibPoint.js');
-let ImagePoint = require('./ImagePoint.js');
-let ImageAndPoints = require('./ImageAndPoints.js');
 let CalibPointArray = require('./CalibPointArray.js');
+let ImageAndPoints = require('./ImageAndPoints.js');
+let ImagePoint = require('./ImagePoint.js');
+let CalibPoint = require('./CalibPoint.js');
 
 module.exports = {
-  CalibPoint: CalibPoint,
-  ImagePoint: ImagePoint,
-  ImageAndPoints: ImageAndPoints,
   CalibPointArray: CalibPointArray,
+  ImageAndPoints: ImageAndPoints,
+  ImagePoint: ImagePoint,
+  CalibPoint: CalibPoint,
 };

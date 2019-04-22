@@ -1,5 +1,5 @@
 set(_CATKIN_CURRENT_PACKAGE "visp_auto_tracker")
-set(visp_auto_tracker_VERSION "0.9.3")
+set(visp_auto_tracker_VERSION "0.10.0")
 set(visp_auto_tracker_MAINTAINER "Fabien Spindler <Fabien.Spindler@inria.fr>")
 set(visp_auto_tracker_PACKAGE_FORMAT "1")
 set(visp_auto_tracker_BUILD_DEPENDS "geometry_msgs" "libdmtx-dev" "message_filters" "resource_retriever" "roscpp" "sensor_msgs" "std_msgs" "visp" "visp_bridge" "visp_tracker" "zbar")

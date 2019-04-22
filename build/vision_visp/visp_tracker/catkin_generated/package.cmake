@@ -1,5 +1,5 @@
 set(_CATKIN_CURRENT_PACKAGE "visp_tracker")
-set(visp_tracker_VERSION "0.9.3")
+set(visp_tracker_VERSION "0.10.0")
 set(visp_tracker_MAINTAINER "Fabien Spindler <fabien.spindler@inria.fr>")
 set(visp_tracker_PACKAGE_FORMAT "1")
 set(visp_tracker_BUILD_DEPENDS "message_generation" "dynamic_reconfigure" "nodelet" "roscpp" "rospy" "std_msgs" "sensor_msgs" "geometry_msgs" "image_proc" "image_transport" "resource_retriever" "tf" "visp")

@@ -1,5 +1,5 @@
 set(_CATKIN_CURRENT_PACKAGE "visp_hand2eye_calibration")
-set(visp_hand2eye_calibration_VERSION "0.9.3")
+set(visp_hand2eye_calibration_VERSION "0.10.0")
 set(visp_hand2eye_calibration_MAINTAINER "Fabien Spindler <Fabien.Spindler@inria.fr>")
 set(visp_hand2eye_calibration_PACKAGE_FORMAT "1")
 set(visp_hand2eye_calibration_BUILD_DEPENDS "visp_bridge" "message_generation" "image_proc" "roscpp" "sensor_msgs" "std_msgs" "geometry_msgs" "visp")

@@ -1,5 +1,5 @@
 set(_CATKIN_CURRENT_PACKAGE "vision_visp")
-set(vision_visp_VERSION "0.9.3")
+set(vision_visp_VERSION "0.10.0")
 set(vision_visp_MAINTAINER "Fabien Spindler <fabien.spindler@inria.fr>")
 set(vision_visp_PACKAGE_FORMAT "1")
 set(vision_visp_BUILD_DEPENDS )

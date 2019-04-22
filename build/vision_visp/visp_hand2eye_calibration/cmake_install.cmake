@@ -103,7 +103,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/visp_hand2eye_calibration/visp_hand2eye_calibration_calibrator")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/visp_hand2eye_calibration/visp_hand2eye_calibration_calibrator"
-         OLD_RPATH "/home/amanuel/catkin_ws_proj/devel/lib:/opt/ros/kinetic/lib:"
+         OLD_RPATH "/home/amanuel/catkin_ws_proj/devel/lib:/opt/ros/kinetic/lib:/opt/ros/kinetic/lib/x86_64-linux-gnu:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/visp_hand2eye_calibration/visp_hand2eye_calibration_calibrator")
@@ -123,7 +123,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/visp_hand2eye_calibration/visp_hand2eye_calibration_client")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/visp_hand2eye_calibration/visp_hand2eye_calibration_client"
-         OLD_RPATH "/home/amanuel/catkin_ws_proj/devel/lib:/opt/ros/kinetic/lib:"
+         OLD_RPATH "/home/amanuel/catkin_ws_proj/devel/lib:/opt/ros/kinetic/lib:/opt/ros/kinetic/lib/x86_64-linux-gnu:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/visp_hand2eye_calibration/visp_hand2eye_calibration_client")
@@ -143,7 +143,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libvisp_hand2eye_calibration_common.so")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libvisp_hand2eye_calibration_common.so"
-         OLD_RPATH "/opt/ros/kinetic/lib:/home/amanuel/catkin_ws_proj/devel/lib:"
+         OLD_RPATH "/opt/ros/kinetic/lib:/home/amanuel/catkin_ws_proj/devel/lib:/opt/ros/kinetic/lib/x86_64-linux-gnu:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libvisp_hand2eye_calibration_common.so")

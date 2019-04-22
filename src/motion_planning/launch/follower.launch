@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="motion_planning" type="path_planner_node" name="path_planner_node"/>
+    <node pkg="motion_planning" type="pure_pursuit_node" name="pure_pursuit_node"/>
+</launch>
