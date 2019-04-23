@@ -86,6 +86,7 @@
 /home/amanuel/catkin_ws_proj/build/motion_planning/CMakeFiles/install.dir
 /home/amanuel/catkin_ws_proj/build/motion_planning/CMakeFiles/edit_cache.dir
 /home/amanuel/catkin_ws_proj/build/motion_planning/CMakeFiles/install/local.dir
+/home/amanuel/catkin_ws_proj/build/motion_planning/CMakeFiles/find_qr.dir
 /home/amanuel/catkin_ws_proj/build/motion_planning/CMakeFiles/visp_auto_tracker_node.dir
 /home/amanuel/catkin_ws_proj/build/motion_planning/CMakeFiles/path_planner_node.dir
 /home/amanuel/catkin_ws_proj/build/motion_planning/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir
@@ -234,6 +235,15 @@
 /home/amanuel/catkin_ws_proj/build/turtlebot3/turtlebot3_teleop/CMakeFiles/install/local.dir
 /home/amanuel/catkin_ws_proj/build/turtlebot3/turtlebot3_teleop/CMakeFiles/test.dir
 /home/amanuel/catkin_ws_proj/build/turtlebot3/turtlebot3_teleop/CMakeFiles/edit_cache.dir
+/home/amanuel/catkin_ws_proj/build/usb_cam/CMakeFiles/list_install_components.dir
+/home/amanuel/catkin_ws_proj/build/usb_cam/CMakeFiles/install.dir
+/home/amanuel/catkin_ws_proj/build/usb_cam/CMakeFiles/rebuild_cache.dir
+/home/amanuel/catkin_ws_proj/build/usb_cam/CMakeFiles/edit_cache.dir
+/home/amanuel/catkin_ws_proj/build/usb_cam/CMakeFiles/test.dir
+/home/amanuel/catkin_ws_proj/build/usb_cam/CMakeFiles/usb_cam.dir
+/home/amanuel/catkin_ws_proj/build/usb_cam/CMakeFiles/usb_cam_node.dir
+/home/amanuel/catkin_ws_proj/build/usb_cam/CMakeFiles/install/local.dir
+/home/amanuel/catkin_ws_proj/build/usb_cam/CMakeFiles/install/strip.dir
 /home/amanuel/catkin_ws_proj/build/vision_visp/visp_bridge/CMakeFiles/rebuild_cache.dir
 /home/amanuel/catkin_ws_proj/build/vision_visp/visp_bridge/CMakeFiles/edit_cache.dir
 /home/amanuel/catkin_ws_proj/build/vision_visp/visp_bridge/CMakeFiles/test.dir

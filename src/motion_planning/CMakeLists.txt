@@ -212,3 +212,7 @@ target_link_libraries(path_planner_node ${catkin_LIBRARIES})
 add_executable(visp_auto_tracker_node src/visp_auto_tracker.cpp)
 add_dependencies(visp_auto_tracker_node ${motion_planning_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(visp_auto_tracker_node ${catkin_LIBRARIES})
+
+add_executable(find_qr src/find_qr.cpp)
+add_dependencies(find_qr ${motion_planning_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(find_qr ${catkin_LIBRARIES})

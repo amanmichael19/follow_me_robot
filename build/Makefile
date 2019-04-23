@@ -543,6 +543,19 @@ turtlebot3_msgs_generate_messages_py/fast:
 .PHONY : turtlebot3_msgs_generate_messages_py/fast
 
 #=============================================================================
+# Target rules for targets named find_qr
+
+# Build rule for target.
+find_qr: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 find_qr
+.PHONY : find_qr
+
+# fast build rule for target.
+find_qr/fast:
+	$(MAKE) -f motion_planning/CMakeFiles/find_qr.dir/build.make motion_planning/CMakeFiles/find_qr.dir/build
+.PHONY : find_qr/fast
+
+#=============================================================================
 # Target rules for targets named visp_auto_tracker_node
 
 # Build rule for target.
@@ -1869,6 +1882,32 @@ flat_world_imu_node/fast:
 .PHONY : flat_world_imu_node/fast
 
 #=============================================================================
+# Target rules for targets named usb_cam
+
+# Build rule for target.
+usb_cam: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 usb_cam
+.PHONY : usb_cam
+
+# fast build rule for target.
+usb_cam/fast:
+	$(MAKE) -f usb_cam/CMakeFiles/usb_cam.dir/build.make usb_cam/CMakeFiles/usb_cam.dir/build
+.PHONY : usb_cam/fast
+
+#=============================================================================
+# Target rules for targets named usb_cam_node
+
+# Build rule for target.
+usb_cam_node: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 usb_cam_node
+.PHONY : usb_cam_node
+
+# fast build rule for target.
+usb_cam_node/fast:
+	$(MAKE) -f usb_cam/CMakeFiles/usb_cam_node.dir/build.make usb_cam/CMakeFiles/usb_cam_node.dir/build
+.PHONY : usb_cam_node/fast
+
+#=============================================================================
 # Target rules for targets named visp_bridge
 
 # Build rule for target.
@@ -2976,6 +3015,7 @@ help:
 	@echo "... turtlebot3_msgs_generate_messages_lisp"
 	@echo "... turtlebot3_msgs_genlisp"
 	@echo "... turtlebot3_msgs_generate_messages_py"
+	@echo "... find_qr"
 	@echo "... visp_auto_tracker_node"
 	@echo "... path_planner_node"
 	@echo "... rosgraph_msgs_generate_messages_cpp"
@@ -3078,6 +3118,8 @@ help:
 	@echo "... trajectory_msgs_generate_messages_lisp"
 	@echo "... trajectory_msgs_generate_messages_py"
 	@echo "... flat_world_imu_node"
+	@echo "... usb_cam"
+	@echo "... usb_cam_node"
 	@echo "... visp_bridge"
 	@echo "... visp_bridge_convert_camera_parameters"
 	@echo "... visp_camera_calibration_geneus"

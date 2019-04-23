@@ -1,0 +1,8 @@
+prefix=/home/amanuel/catkin_ws_proj/install
+
+Name: usb_cam
+Description: Description of usb_cam
+Version: 0.3.6
+Cflags: -I/home/amanuel/catkin_ws_proj/install/include
+Libs: -L/home/amanuel/catkin_ws_proj/install/lib -lusb_cam
+Requires: 
