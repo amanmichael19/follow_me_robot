@@ -1,5 +1,5 @@
-## follow_me_robot
-## Design a ROS system so that a robot can follow a target
+## Follow_me_robot
+  The goal was to design a ROS system so that a robot can follow a target by tracking a QR code that is o the target.
 
 
 
